@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    const urlPokemon = 'https://pokeapi.co/api/v2/pokemon/'
+    const pokemons = []
+    const pokemon = []
+
+    function getApi(pokemon) {
+        fetch(urlPokemon)
+            .then((res) => res.json())
+            .then((json) => {
+                json.results.forEach((el) => {
+                    if (el.name == pokemon) getPokemon(el.url)
+                });
+            });
+    }
+
+    function getPokemon(url) {
+        fetch(url)
+            .then((res) => res.json())
+            .then((json) => {
+                // console.log(json)
+                let tipos = []
+                let atributos = []
+                let habilidades = []
+                json.types.forEach((tipo) => tipos = [...tipos, tipo.type.name])
+                json.stats.forEach((atributo) => {
+                    let a = { nombre: atributo.stat.name, valor: atributo.base_stat }
+                    atributos = [...atributos, a]
+                })
+                json.abilities.forEach((habilidad) => habilidades = [...habilidades, habilidad.ability.name])
+                let p = {
+                    id: json.id,
+                    nombre: json.name,
+                    avatar: json.sprites.front_default,
+                    tipos: tipos,
+                    atributos: atributos,
+                    habilidades: habilidades
+                };
+                pokemon.push(p)
+            });
+    }
+
+    getApi("caterpie")
+    console.log(pokemon)
+</script>
+
+<body>
+
+</body>
+
+</html>
